@@ -1,5 +1,6 @@
 package com.usermanagement.identity_srv.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,9 @@ public class UserService {
     }
 
     String token = jwtService.generateToken(user.getEmail());
+
+    user.setLastLogin(LocalDateTime.now());
+
     return new LoginResponse(token);
   }
 

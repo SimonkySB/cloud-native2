@@ -19,12 +19,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:7071/api/roles",
-									"protocol": "http",
+									"raw": "https://users-roles-func-dev.azurewebsites.net/api/roles",
+									"protocol": "https",
 									"host": [
-										"localhost"
+										"users-roles-func-dev",
+										"azurewebsites",
+										"net"
 									],
-									"port": "7071",
 									"path": [
 										"api",
 										"roles"
@@ -40,7 +41,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"name\": \"User\"\n}\n",
+									"raw": "{\n  \"name\": \"Admin\"\n}\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -48,12 +49,13 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:7071/api/roles",
-									"protocol": "http",
+									"raw": "https://users-roles-func-dev.azurewebsites.net/api/roles",
+									"protocol": "https",
 									"host": [
-										"localhost"
+										"users-roles-func-dev",
+										"azurewebsites",
+										"net"
 									],
-									"port": "7071",
 									"path": [
 										"api",
 										"roles"
@@ -98,6 +100,15 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Test\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "http://localhost:7071/api/roles/:id",
 									"protocol": "http",
@@ -113,7 +124,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "",
+											"value": "e7afb711-81ef-459d-9ad5-f1442e8db8b8",
 											"description": "id role"
 										}
 									]
@@ -321,7 +332,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"name\": \"Juan Pérez\",\n  \"email\": \"juan.perez@email.com\",\n  \"roleId\": \"1f4f2242-6e01-463a-bf69-9b7917a92293\"\n}\n",
+									"raw": "{\n    \"email\": \"test2@example.com\",\n    \"username\": \"tester\",\n    \"password\": \"123456\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -329,15 +340,89 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:7071/api/users",
-									"protocol": "http",
+									"raw": "{{url}}/api/users?",
 									"host": [
-										"localhost"
+										"{{url}}"
 									],
-									"port": "7071",
 									"path": [
 										"api",
 										"users"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update active status",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"active\": false\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/users/:id/status",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"users",
+										":id",
+										"status"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update user data",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"nuevo_usuario\",\n  \"email\": \"nuevo@correo.com\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/users/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1",
+											"description": "user id"
+										}
 									]
 								}
 							},
@@ -351,6 +436,9 @@
 						{
 							"name": "Login",
 							"request": {
+								"auth": {
+									"type": "noauth"
+								},
 								"method": "POST",
 								"header": [],
 								"body": {

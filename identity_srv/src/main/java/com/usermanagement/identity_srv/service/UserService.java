@@ -84,4 +84,8 @@ public class UserService {
     repository.save(user);
   }
 
+  public User getUserByEmail(String email) {
+    return repository.findByEmail(email)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+  }
 }

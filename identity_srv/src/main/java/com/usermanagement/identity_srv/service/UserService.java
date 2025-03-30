@@ -21,11 +21,13 @@ public class UserService {
   private final UserRepository repository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
+  private final AzureFunctionService azureFunctionService;
 
-  public UserService(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+  public UserService(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, AzureFunctionService azureFunctionService) {
     this.repository = repository;
     this.passwordEncoder = passwordEncoder;
     this.jwtService = jwtService;
+    this.azureFunctionService = azureFunctionService;
   }
 
   public List<User> getAllUsers() {
@@ -61,7 +63,23 @@ public class UserService {
 
     String token = jwtService.generateToken(user.getEmail());
 
-    user.setLastLogin(LocalDateTime.now());
+    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime userLastLogin = user.getLastLogin();
+
+    
+  // Verifica si el usuario intentó iniciar sesión en menos de 1 minuto
+    if(userLastLogin != null && userLastLogin.isAfter(now.minusMinutes(1))){
+      try {
+        azureFunctionService.ExecuteSuspiciousActivityFor(user.getEmail());
+      } catch(Exception ex) {
+        ex.printStackTrace();
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "internal server error");
+      }
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You have attempted to log in too frequently. Please wait a moment.");
+    }
+
+    user.setLastLogin(now);
+    repository.save(user);
 
     return new LoginResponse(token);
   }
@@ -88,4 +106,7 @@ public class UserService {
     return repository.findByEmail(email)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
   }
+
+
+  
 }

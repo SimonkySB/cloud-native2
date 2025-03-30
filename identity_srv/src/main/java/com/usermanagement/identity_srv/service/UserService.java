@@ -49,6 +49,10 @@ public class UserService {
     User user = repository.findByEmail(request.getEmail())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
+    if (!user.isActive()) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is inactive");
+    }
+
     if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
     }

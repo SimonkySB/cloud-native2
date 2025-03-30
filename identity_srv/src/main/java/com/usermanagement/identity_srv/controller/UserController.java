@@ -20,6 +20,7 @@ import com.usermanagement.identity_srv.dto.UpdateUserStatusRequest;
 import com.usermanagement.identity_srv.dto.UserCreateRequest;
 import com.usermanagement.identity_srv.model.User;
 import com.usermanagement.identity_srv.service.UserService;
+import com.usermanagement.identity_srv.utils.AuthUtils;
 
 import jakarta.validation.Valid;
 
@@ -63,4 +64,14 @@ public class UserController {
     service.updateUser(id, request);
     return ResponseEntity.noContent().build();
   }
+
+  @GetMapping("/me")
+  public ResponseEntity<User> getAuthenticatedUser() {
+    String email = AuthUtils.getCurrentUserEmail();
+
+    User user = service.getUserByEmail(email);
+
+    return ResponseEntity.ok(user);
+  }
+
 }

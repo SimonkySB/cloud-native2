@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.usermanagement.identity_srv.dto.LoginRequest;
 import com.usermanagement.identity_srv.dto.LoginResponse;
+import com.usermanagement.identity_srv.dto.UpdateUserRequest;
 import com.usermanagement.identity_srv.dto.UpdateUserStatusRequest;
 import com.usermanagement.identity_srv.dto.UserCreateRequest;
 import com.usermanagement.identity_srv.model.User;
@@ -55,4 +57,10 @@ public class UserController {
     return ResponseEntity.noContent().build();
   }
 
+  @PutMapping("/{id}")
+  public ResponseEntity<Void> updateUser(@PathVariable Long id,
+      @Valid @RequestBody UpdateUserRequest request) {
+    service.updateUser(id, request);
+    return ResponseEntity.noContent().build();
+  }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.usermanagement.identity_srv.dto.LoginRequest;
 import com.usermanagement.identity_srv.dto.LoginResponse;
+import com.usermanagement.identity_srv.dto.UpdateUserRequest;
 import com.usermanagement.identity_srv.dto.UserCreateRequest;
 import com.usermanagement.identity_srv.model.User;
 import com.usermanagement.identity_srv.repository.UserRepository;
@@ -70,6 +71,16 @@ public class UserService {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
     user.setActive(active);
+    repository.save(user);
+  }
+
+  public void updateUser(Long id, UpdateUserRequest request) {
+    User user = repository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+    user.setUsername(request.getUsername());
+    user.setEmail(request.getEmail());
+
     repository.save(user);
   }
 

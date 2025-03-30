@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.usermanagement.identity_srv.dto.LoginRequest;
+import com.usermanagement.identity_srv.dto.LoginResponse;
 import com.usermanagement.identity_srv.dto.UserCreateRequest;
 import com.usermanagement.identity_srv.model.User;
 import com.usermanagement.identity_srv.service.UserService;
@@ -24,6 +26,12 @@ public class UserController {
 
   public UserController(UserService service) {
     this.service = service;
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+    LoginResponse response = service.login(request);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping

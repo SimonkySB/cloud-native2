@@ -7,6 +7,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.usermanagement.identity_srv.dto.LoginRequest;
+import com.usermanagement.identity_srv.dto.LoginResponse;
 import com.usermanagement.identity_srv.dto.UserCreateRequest;
 import com.usermanagement.identity_srv.model.User;
 import com.usermanagement.identity_srv.repository.UserRepository;
@@ -39,6 +41,19 @@ public class UserService {
     user.setPassword(hashedPassword);
 
     return repository.save(user);
+  }
+
+  public LoginResponse login(LoginRequest request) {
+    User user = repository.findByEmail(request.getEmail())
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
+
+    boolean validPassword = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+    if (!validPassword) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+    }
+
+    return new LoginResponse("Login successful");
   }
 
 }

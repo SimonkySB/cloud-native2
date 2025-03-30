@@ -2,8 +2,10 @@ package com.usermanagement.identity_srv.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.usermanagement.identity_srv.dto.UserCreateRequest;
 import com.usermanagement.identity_srv.model.User;
@@ -25,6 +27,10 @@ public class UserService {
   }
 
   public User createUser(UserCreateRequest request) {
+    if (repository.findByEmail(request.getEmail()).isPresent()) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+    }
+
     User user = new User();
     user.setEmail(request.getEmail());
     user.setUsername(request.getUsername());
@@ -34,4 +40,5 @@ public class UserService {
 
     return repository.save(user);
   }
+
 }

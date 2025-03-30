@@ -2,6 +2,7 @@ package com.usermanagement.identity_srv.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.usermanagement.identity_srv.dto.UserCreateRequest;
@@ -12,9 +13,11 @@ import com.usermanagement.identity_srv.repository.UserRepository;
 public class UserService {
 
   private final UserRepository repository;
+  private final PasswordEncoder passwordEncoder;
 
-  public UserService(UserRepository repository) {
+  public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
     this.repository = repository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   public List<User> getAllUsers() {
@@ -25,8 +28,10 @@ public class UserService {
     User user = new User();
     user.setEmail(request.getEmail());
     user.setUsername(request.getUsername());
-    user.setPassword(request.getPassword()); // ⚠️ Esto luego se debe hashear
+
+    String hashedPassword = passwordEncoder.encode(request.getPassword());
+    user.setPassword(hashedPassword);
+
     return repository.save(user);
   }
-
 }

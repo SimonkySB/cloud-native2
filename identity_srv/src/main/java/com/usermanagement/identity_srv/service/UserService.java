@@ -65,4 +65,12 @@ public class UserService {
     return new LoginResponse(token);
   }
 
+  public void updateUserStatus(Long userId, boolean active) {
+    User user = repository.findById(userId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+    user.setActive(active);
+    repository.save(user);
+  }
+
 }

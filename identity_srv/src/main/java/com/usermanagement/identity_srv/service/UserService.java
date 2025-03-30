@@ -2,8 +2,14 @@ package com.usermanagement.identity_srv.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.usermanagement.identity_srv.dto.LoginRequest;
+import com.usermanagement.identity_srv.dto.LoginResponse;
+import com.usermanagement.identity_srv.dto.UserCreateRequest;
 import com.usermanagement.identity_srv.model.User;
 import com.usermanagement.identity_srv.repository.UserRepository;
 
@@ -11,12 +17,43 @@ import com.usermanagement.identity_srv.repository.UserRepository;
 public class UserService {
 
   private final UserRepository repository;
+  private final PasswordEncoder passwordEncoder;
 
-  public UserService(UserRepository repository) {
+  public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
     this.repository = repository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   public List<User> getAllUsers() {
     return repository.findAll();
   }
+
+  public User createUser(UserCreateRequest request) {
+    if (repository.findByEmail(request.getEmail()).isPresent()) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+    }
+
+    User user = new User();
+    user.setEmail(request.getEmail());
+    user.setUsername(request.getUsername());
+
+    String hashedPassword = passwordEncoder.encode(request.getPassword());
+    user.setPassword(hashedPassword);
+
+    return repository.save(user);
+  }
+
+  public LoginResponse login(LoginRequest request) {
+    User user = repository.findByEmail(request.getEmail())
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
+
+    boolean validPassword = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+    if (!validPassword) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+    }
+
+    return new LoginResponse("Login successful");
+  }
+
 }

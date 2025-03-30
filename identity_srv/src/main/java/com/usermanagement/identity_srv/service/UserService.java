@@ -18,10 +18,12 @@ public class UserService {
 
   private final UserRepository repository;
   private final PasswordEncoder passwordEncoder;
+  private final JwtService jwtService;
 
-  public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
+  public UserService(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService) {
     this.repository = repository;
     this.passwordEncoder = passwordEncoder;
+    this.jwtService = jwtService;
   }
 
   public List<User> getAllUsers() {
@@ -47,13 +49,12 @@ public class UserService {
     User user = repository.findByEmail(request.getEmail())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
-    boolean validPassword = passwordEncoder.matches(request.getPassword(), user.getPassword());
-
-    if (!validPassword) {
+    if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
     }
 
-    return new LoginResponse("Login successful");
+    String token = jwtService.generateToken(user.getEmail());
+    return new LoginResponse(token);
   }
 
 }

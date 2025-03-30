@@ -22,6 +22,7 @@ import com.usermanagement.identity_srv.model.User;
 import com.usermanagement.identity_srv.service.UserService;
 import com.usermanagement.identity_srv.utils.AuthUtils;
 
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -41,8 +42,9 @@ public class UserController {
   }
 
   @GetMapping
-  public List<User> getAllUsers() {
-    return service.getAllUsers();
+  public ResponseEntity<List<User>> getAllUsers() {
+    var users = service.getAllUsers();
+    return ResponseEntity.ok(users);
   }
 
   @PostMapping

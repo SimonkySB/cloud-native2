@@ -1,6 +1,8 @@
 package com.cloudnative.bff.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +17,7 @@ import reactor.core.publisher.Mono;
 
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/bff/users")
 public class UsuarioController {
     @Autowired
     private WebClient.Builder webClientBuilder;
@@ -25,7 +27,7 @@ public class UsuarioController {
     public Mono<ResponseEntity<String>> login(@RequestBody String body) {
         return webClientBuilder.build()
                 .post()
-                .uri(BASE_URL)
+                .uri(BASE_URL + "/login")
                 .bodyValue(body)
                 .retrieve()
                 .toEntity(String.class);
@@ -75,6 +77,16 @@ public class UsuarioController {
                 .put()
                 .uri(BASE_URL + "/" + id)
                 .bodyValue(body)
+                .retrieve()
+                .toEntity(String.class);
+    }
+
+
+    @GetMapping("/me")
+    public Mono<ResponseEntity<String>> me() {
+        return webClientBuilder.build()
+                .get()
+                .uri(BASE_URL + "/me")
                 .retrieve()
                 .toEntity(String.class);
     }

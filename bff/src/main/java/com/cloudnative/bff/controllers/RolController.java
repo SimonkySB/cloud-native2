@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping("/bff/roles")
 public class RolController {
     
     @Autowired

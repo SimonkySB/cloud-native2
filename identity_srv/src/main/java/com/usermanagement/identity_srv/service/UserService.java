@@ -1,6 +1,7 @@
 package com.usermanagement.identity_srv.service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -10,47 +11,67 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.usermanagement.identity_srv.dto.LoginRequest;
 import com.usermanagement.identity_srv.dto.LoginResponse;
-import com.usermanagement.identity_srv.dto.UpdateUserRequest;
-import com.usermanagement.identity_srv.dto.UserCreateRequest;
+import com.usermanagement.identity_srv.dto.UserDto;
+import com.usermanagement.identity_srv.model.Role;
 import com.usermanagement.identity_srv.model.User;
+import com.usermanagement.identity_srv.repository.RoleRepository;
 import com.usermanagement.identity_srv.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserService {
 
-  private final UserRepository repository;
+  private final UserRepository userRepository;
+  private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AzureFunctionService azureFunctionService;
 
-  public UserService(UserRepository repository, PasswordEncoder passwordEncoder, JwtService jwtService, AzureFunctionService azureFunctionService) {
-    this.repository = repository;
+  public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,
+      JwtService jwtService,
+      AzureFunctionService azureFunctionService) {
+    this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.jwtService = jwtService;
     this.azureFunctionService = azureFunctionService;
+    this.roleRepository = roleRepository;
   }
 
   public List<User> getAllUsers() {
-    return repository.findAll();
+    return userRepository.findAll();
   }
 
-  public User createUser(UserCreateRequest request) {
-    if (repository.findByEmail(request.getEmail()).isPresent()) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+  @Transactional
+  public User create(UserDto dto) {
+    User user = new User(dto.email(), dto.username(), dto.password());
+    user.setActive(dto.active());
+
+    if (dto.roleIds() != null && !dto.roleIds().isEmpty()) {
+      List<Role> roles = roleRepository.findAllById(dto.roleIds());
+      user.setRoles(new HashSet<>(roles));
     }
 
-    User user = new User();
-    user.setEmail(request.getEmail());
-    user.setUsername(request.getUsername());
+    return userRepository.save(user);
+  }
 
-    String hashedPassword = passwordEncoder.encode(request.getPassword());
-    user.setPassword(hashedPassword);
+  @Transactional
+  public User update(Long id, UserDto dto) {
+    User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
-    return repository.save(user);
+    user.setUsername(dto.username());
+    user.setEmail(dto.email());
+
+    if (dto.roleIds() != null) {
+      List<Role> roles = roleRepository.findAllById(dto.roleIds());
+      user.setRoles(new HashSet<>(roles));
+    }
+
+    return userRepository.save(user);
   }
 
   public LoginResponse login(LoginRequest request) {
-    User user = repository.findByEmail(request.getEmail())
+    User user = userRepository.findByEmail(request.getEmail())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
     if (!user.isActive()) {
@@ -66,47 +87,42 @@ public class UserService {
     LocalDateTime now = LocalDateTime.now();
     LocalDateTime userLastLogin = user.getLastLogin();
 
-    
-  // Verifica si el usuario intentó iniciar sesión en menos de 1 minuto
-    if(userLastLogin != null && userLastLogin.isAfter(now.minusMinutes(1))){
+    // Verifica si el usuario intentó iniciar sesión en menos de 1 minuto
+    if (userLastLogin != null && userLastLogin.isAfter(now.minusMinutes(1))) {
       try {
         azureFunctionService.ExecuteSuspiciousActivityFor(user.getEmail());
-      } catch(Exception ex) {
+      } catch (Exception ex) {
         ex.printStackTrace();
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "internal server error");
       }
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You have attempted to log in too frequently. Please wait a moment.");
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+          "You have attempted to log in too frequently. Please wait a moment.");
     }
 
     user.setLastLogin(now);
-    repository.save(user);
+    userRepository.save(user);
 
     return new LoginResponse(token);
   }
 
   public void updateUserStatus(Long userId, boolean active) {
-    User user = repository.findById(userId)
+    User user = userRepository.findById(userId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
     user.setActive(active);
-    repository.save(user);
-  }
-
-  public void updateUser(Long id, UpdateUserRequest request) {
-    User user = repository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
-    user.setUsername(request.getUsername());
-    user.setEmail(request.getEmail());
-
-    repository.save(user);
+    userRepository.save(user);
   }
 
   public User getUserByEmail(String email) {
-    return repository.findByEmail(email)
+    return userRepository.findByEmail(email)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
   }
 
-
-  
+  @Transactional
+  public void assignRolesToUser(Long userId, List<Long> roleIds) {
+    User user = userRepository.findById(userId).orElseThrow();
+    List<Role> roles = roleRepository.findAllById(roleIds);
+    user.setRoles(new HashSet<>(roles));
+    userRepository.save(user);
+  }
 }

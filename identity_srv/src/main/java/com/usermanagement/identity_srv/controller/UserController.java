@@ -2,7 +2,6 @@ package com.usermanagement.identity_srv.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,15 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.usermanagement.identity_srv.dto.AssignRoles;
 import com.usermanagement.identity_srv.dto.LoginRequest;
 import com.usermanagement.identity_srv.dto.LoginResponse;
-import com.usermanagement.identity_srv.dto.UpdateUserRequest;
 import com.usermanagement.identity_srv.dto.UpdateUserStatusRequest;
-import com.usermanagement.identity_srv.dto.UserCreateRequest;
+import com.usermanagement.identity_srv.dto.UserDto;
 import com.usermanagement.identity_srv.model.User;
 import com.usermanagement.identity_srv.service.UserService;
 import com.usermanagement.identity_srv.utils.AuthUtils;
-
 
 import jakarta.validation.Valid;
 
@@ -48,9 +46,8 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateRequest request) {
-    User newUser = service.createUser(request);
-    return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+  public ResponseEntity<User> create(@RequestBody UserDto dto) {
+    return ResponseEntity.ok(service.create(dto));
   }
 
   @PatchMapping("/{id}/status")
@@ -61,10 +58,8 @@ public class UserController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Void> updateUser(@PathVariable Long id,
-      @Valid @RequestBody UpdateUserRequest request) {
-    service.updateUser(id, request);
-    return ResponseEntity.noContent().build();
+  public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserDto dto) {
+    return ResponseEntity.ok(service.update(id, dto));
   }
 
   @GetMapping("/me")
@@ -74,6 +69,12 @@ public class UserController {
     User user = service.getUserByEmail(email);
 
     return ResponseEntity.ok(user);
+  }
+
+  @PutMapping("/{id}/roles")
+  public ResponseEntity<Void> assignRoles(@PathVariable Long id, @RequestBody AssignRoles dto) {
+    service.assignRolesToUser(id, dto.roleIds());
+    return ResponseEntity.ok().build();
   }
 
 }

@@ -22,9 +22,7 @@ public class RolController {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-
-    @Value("${roles-url}")
-    private String BASE_URL;
+    private String BASE_URL = "http://permissionsms:8082/api/roles";
 
 
     @GetMapping

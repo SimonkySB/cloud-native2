@@ -15,8 +15,8 @@ WORKDIR /app
 
 
 COPY --from=builder /app/target/*.jar app.jar
+COPY Wallet_U8R9MXI3504ZG1FO ./Wallet_U8R9MXI3504ZG1FO
 
-
-EXPOSE 8089
+EXPOSE 8082
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

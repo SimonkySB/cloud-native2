@@ -23,8 +23,7 @@ public class PermissionController {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    @Value("${permissions-url}")
-    private String BASE_URL;
+    private String BASE_URL = "http://permissionsms:8082/api/permissions";
 
 
     @GetMapping

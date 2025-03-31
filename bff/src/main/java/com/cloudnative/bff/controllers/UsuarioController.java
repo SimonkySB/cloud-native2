@@ -21,8 +21,7 @@ public class UsuarioController {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    @Value("${identity-url}")
-    private String BASE_URL;
+    private String BASE_URL = "http://identityms:8080/api/users";
 
     @PostMapping("/login")
     public Mono<ResponseEntity<String>> login(@RequestBody String body) {

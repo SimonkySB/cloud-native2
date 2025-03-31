@@ -1,6 +1,7 @@
 package com.cloudnative.bff.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,9 @@ import reactor.core.publisher.Mono;
 public class UsuarioController {
     @Autowired
     private WebClient.Builder webClientBuilder;
-    private String BASE_URL = "http://localhost:8080/api/users";
+
+    @Value("${identity-url}")
+    private String BASE_URL;
 
     @PostMapping("/login")
     public Mono<ResponseEntity<String>> login(@RequestBody String body) {

@@ -16,14 +16,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/bff/roles")
-public class RolController {
+@RequestMapping("/bff/permissions")
+public class PermissionController {
     
+
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-
-    @Value("${roles-url}")
+    @Value("${permissions-url}")
     private String BASE_URL;
 
 

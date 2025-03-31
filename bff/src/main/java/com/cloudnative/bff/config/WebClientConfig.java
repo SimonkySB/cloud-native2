@@ -20,7 +20,12 @@ public class WebClientConfig {
   public WebClient.Builder webClientBuilder() {
     ExchangeFilterFunction authFilter = ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
             ClientRequest authorizedRequest = ClientRequest.from(clientRequest)
-                    .headers(headers -> headers.setBearerAuth(getCurrentToken()))
+                    .headers(headers -> {
+                      String token = getCurrentToken();
+                      if(token != null && !token.isEmpty()) {
+                        headers.setBearerAuth(token);
+                      }
+                    })
                     .build();
             return Mono.just(authorizedRequest);
         });

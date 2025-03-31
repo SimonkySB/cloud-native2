@@ -39,30 +39,7 @@
         </dependency>
 
         
-        <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
-            <scope>runtime</scope>
-            <version>23.2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle.database.security</groupId>
-            <artifactId>oraclepki</artifactId>
-            <scope>runtime</scope>
-            <version>23.2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle.database.security</groupId>
-            <artifactId>osdt_cert</artifactId>
-            <scope>runtime</scope>
-            <version>21.9.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle.database.security</groupId>
-            <artifactId>osdt_core</artifactId>
-            <scope>runtime</scope>
-            <version>21.5.0.0</version>
-        </dependency>
+        
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -105,8 +82,8 @@
                     <!-- <disableAppInsights></disableAppInsights> -->
                     <runtime>
                         <!-- runtime os, could be windows, linux or docker-->
-                        <os>windows</os>
-                        <javaVersion>17</javaVersion>
+                        <os>linux</os>
+                        <javaVersion>21</javaVersion>
                     </runtime>
                     <appSettings>
                         <property>

@@ -3,6 +3,7 @@ package com.usermanagement.identity_srv.service;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -124,5 +125,16 @@ public class UserService {
     List<Role> roles = roleRepository.findAllById(roleIds);
     user.setRoles(new HashSet<>(roles));
     userRepository.save(user);
+    
+    try {
+      String rolesStr = user.getRoles().stream()
+      .map(r -> r.getName())
+      .collect(Collectors.joining(", "));
+      
+      azureFunctionService.ExecuteRolChangeFor(user.getEmail(), rolesStr);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "internal server error");
+    }
   }
 }

@@ -1,17 +1,22 @@
-{ "properties": [
-    {
-        "name": "azure.function.suspicious-activity-url",
-        "type": "java.lang.String",
-        "description": "A description for 'azure.function.suspicious-activity-url'"
-    },
-    {
-        "name": "jwt.expiration",
-        "type": "java.lang.String",
-        "description": "A description for 'jwt.expiration'"
-    },
-    {
-        "name": "jwt.secret",
-        "type": "java.lang.String",
-        "description": "A description for 'jwt.secret'"
-    }
+{"properties": [
+  {
+    "name": "azure.function.suspicious-activity-url",
+    "type": "java.lang.String",
+    "description": "A description for 'azure.function.suspicious-activity-url'"
+  },
+  {
+    "name": "jwt.expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.expiration'"
+  },
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.secret'"
+  },
+  {
+    "name": "azure.function.rol-change-url",
+    "type": "java.lang.String",
+    "description": "A description for 'azure.function.rol-change-url'"
+  }
 ]}

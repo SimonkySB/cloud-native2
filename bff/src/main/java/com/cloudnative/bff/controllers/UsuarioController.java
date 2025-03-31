@@ -2,8 +2,6 @@ package com.cloudnative.bff.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,6 +88,16 @@ public class UsuarioController {
         return webClientBuilder.build()
                 .get()
                 .uri(BASE_URL + "/me")
+                .retrieve()
+                .toEntity(String.class);
+    }
+
+    @PutMapping("/{id}/roles")
+    public Mono<ResponseEntity<String>> assignRoles(@PathVariable String id, @RequestBody String body) {
+        return webClientBuilder.build()
+                .put()
+                .uri(BASE_URL + "/" + id + "/roles")
+                .bodyValue(body)
                 .retrieve()
                 .toEntity(String.class);
     }

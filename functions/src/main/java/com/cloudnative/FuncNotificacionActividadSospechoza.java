@@ -33,7 +33,10 @@ public class FuncNotificacionActividadSospechoza {
                 return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Cuerpo de la solicitud vacio").build();
             }    
 
-            return request.createResponseBuilder(HttpStatus.OK).body("Se ha detectado una actividad sospechoza e informado al usuario: " + body).build();
+            String message = "Se ha detectado una actividad sospechoza e informado al usuario: " + body;
+            context.getLogger().info(message);
+
+            return request.createResponseBuilder(HttpStatus.OK).body(message).build();
 
         } catch (Exception ex) {
             context.getLogger().severe("FuncNotificacionActividadSospechoza, Error procesando solicitud");

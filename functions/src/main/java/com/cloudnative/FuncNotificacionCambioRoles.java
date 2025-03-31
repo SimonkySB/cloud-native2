@@ -31,7 +31,9 @@ public class FuncNotificacionCambioRoles {
                 return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Cuerpo de la solicitud vacio").build();
             }    
 
-            return request.createResponseBuilder(HttpStatus.OK).body("Se han cambiado los roles y permisos y enviado un mensaje al usuario: " + body).build();
+            String message = body;
+            context.getLogger().info(message);
+            return request.createResponseBuilder(HttpStatus.OK).body(message).build();
 
         } catch (Exception ex) {
             context.getLogger().severe("FuncNotificacionCambioRoles, Error procesando solicitud");

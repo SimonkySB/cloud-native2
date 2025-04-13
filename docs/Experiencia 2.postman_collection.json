@@ -1,0 +1,756 @@
+{
+	"info": {
+		"_postman_id": "141880eb-1ccd-4eb2-a75f-2d6bf4fed325",
+		"name": "Experiencia 1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21928874",
+		"_collection_link": "https://universal-astronaut-812700.postman.co/workspace/Cloud-Native-II-~93b8b2db-ffd2-4f81-a8e4-90fa9bea078c/collection/21928874-141880eb-1ccd-4eb2-a75f-2d6bf4fed325?action=share&source=collection_link&creator=21928874"
+	},
+	"item": [
+		{
+			"name": "Semana 2",
+			"item": [
+				{
+					"name": "azure function example local",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7071/api/HttpExample?name=Gustavo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"HttpExample"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Gustavo"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "azure function example cloud",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "create appointment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patientId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"vetId\": \"456e7890-e89b-12d3-a456-426614174111\",\n  \"appointmentDate\": \"2025-03-25T10:30:00\",\n  \"reason\": \"Consulta general y vacunación anual\",\n  \"status\": \"SCHEDULED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/appointments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "appointment az function local",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patientId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"vetId\": \"456e7890-e89b-12d3-a456-426614174111\",\n  \"appointmentDate\": \"2025-03-25T10:30:00\",\n  \"reason\": \"Consulta general y vacunación anual\",\n  \"status\": \"SCHEDULED\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/ConfirmAppointment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"ConfirmAppointment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "appointment az function cloud",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patientId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"vetId\": \"456e7890-e89b-12d3-a456-426614174111\",\n  \"appointmentDate\": \"2025-03-25T10:30:00\",\n  \"reason\": \"Consulta general y vacunación anual\",\n  \"status\": \"SCHEDULED\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://az-fn-test.azurewebsites.net/api/ConfirmAppointment",
+							"protocol": "https",
+							"host": [
+								"az-fn-test",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"api",
+								"ConfirmAppointment"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Semana 3",
+			"item": [
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "Get users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/users?",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create users",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"fran4@example.com\",\n  \"username\": \"fran4\",\n  \"password\": \"supersecure123\",\n  \"roleIds\": [7]\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/users?",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update active status",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"active\": false\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/users/:id/status",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"users",
+										":id",
+										"status"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "41"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update user data",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"nuevo_usuario\",\n  \"email\": \"nuevo@correo.com\",\n  \"roleIds\": [8]\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/users/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "41",
+											"description": "user id"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Login",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"test2@example.com\",\n    \"password\": \"123456\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/users/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Roles",
+					"item": [
+						{
+							"name": "Get roles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/roles?",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"roles"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create role",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Ejecutivo\",\n  \"code\": \"ROLE_EJECUTIVO\",\n  \"permissionIds\": [1]  // IDs de permisos existentes\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/roles?",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"roles"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get role by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/roles/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"roles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "21",
+											"description": "id role"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put role",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Administrador actualizado\",\n  \"code\": \"ROLE_ADMIN\",\n  \"permissionIds\": [1, 3, 4]\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/roles/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"roles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "7",
+											"description": "id role"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete role",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/roles/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"roles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "21",
+											"description": "id role"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Permissions",
+					"item": [
+						{
+							"name": "Get permissions",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/permissions?",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"permissions"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create permission",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Ver reportes\",\n  \"code\": \"PERM_VIEW_REPORTS\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/permissions?",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"permissions"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put permission",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Ver reportes de usuarios\",\n  \"code\": \"PERM_VIEW_USER_REPORTS\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/permissions/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"permissions",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "21",
+											"description": "permission id"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete permission",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Ver reportes de usuarios\",\n  \"code\": \"PERM_VIEW_USER_REPORTS\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/permissions/:id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"permissions",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "21",
+											"description": "permission id"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Semana 4",
+			"item": [
+				{
+					"name": "appointments-srv",
+					"item": [
+						{
+							"name": "get appointments",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/api/appointments",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"appointments"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "graphQL",
+					"item": [
+						{
+							"name": "get appointment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": \"{ getAppointments { clientName petName reason appointmentDate } }\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7071/api/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7071",
+									"path": [
+										"api",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Semana 5",
+			"item": [
+				{
+					"name": "graphql",
+					"item": [
+						{
+							"name": "active-sessions",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": \"query { getActiveSessions { username role ipAddress sessionStart lastAction } }\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7071/api/active-sessions",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7071",
+									"path": [
+										"api",
+										"active-sessions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "role-audit",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": \"query { getRoleAuditTrail { performedBy timestamp targetUser changes { action role } } }\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:7071/api/role-audit",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "7071",
+									"path": [
+										"api",
+										"role-audit"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "rest",
+					"item": []
+				}
+			]
+		}
+	]
+}

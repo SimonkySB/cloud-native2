@@ -17,7 +17,7 @@ public class LoginAttemptFunction {
      */
     @FunctionName("LoginAttemptFunction")
     public HttpResponseMessage run(
-            @HttpTrigger(name = "req", methods = {HttpMethod.GET}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
+            @HttpTrigger(name = "req", methods = {HttpMethod.GET}, authLevel = AuthorizationLevel.ANONYMOUS, route = "login-attempts") HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
         try {

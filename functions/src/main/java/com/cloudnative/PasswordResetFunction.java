@@ -16,7 +16,7 @@ public class PasswordResetFunction {
      */
     @FunctionName("PasswordResetFunction")
     public HttpResponseMessage run(
-            @HttpTrigger(name = "req", methods = {HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
+            @HttpTrigger(name = "req", methods = {HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS, route = "password-reset") HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
         try {

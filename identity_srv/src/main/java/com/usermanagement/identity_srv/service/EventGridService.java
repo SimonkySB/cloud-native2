@@ -34,6 +34,8 @@ public class EventGridService {
         String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
             .format(DateTimeFormatter.ISO_INSTANT);
 
+        String dataJson = String.format("\"%s\"", body.replace("\"", "\\\""));
+
         String eventPayload = String.format(
           "[{\"id\":\"%s\"," +
               "\"eventType\":\"%s\"," +
@@ -41,7 +43,7 @@ public class EventGridService {
               "\"eventTime\":\"%s\"," +
               "\"data\":%s," +
               "\"dataVersion\":\"1.0\"}]",
-          eventId, eventType, timestamp, body);
+          eventId, eventType, timestamp, dataJson);
 
         
         System.out.println(String.format("Enviando evento: %s", eventPayload));
@@ -67,6 +69,7 @@ public class EventGridService {
         String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
             .format(DateTimeFormatter.ISO_INSTANT);
 
+        String dataJson = String.format("\"%s\"", body.replace("\"", "\\\""));
         String eventPayload = String.format(
           "[{\"id\":\"%s\"," +
               "\"eventType\":\"%s\"," +
@@ -74,7 +77,7 @@ public class EventGridService {
               "\"eventTime\":\"%s\"," +
               "\"data\":%s," +
               "\"dataVersion\":\"1.0\"}]",
-          eventId, eventType, timestamp, body);
+          eventId, eventType, timestamp, dataJson);
 
         
         System.out.println(String.format("Enviando evento: %s", eventPayload));

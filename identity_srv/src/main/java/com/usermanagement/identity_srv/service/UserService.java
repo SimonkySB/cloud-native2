@@ -27,16 +27,13 @@ public class UserService {
   private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
-  private final AzureFunctionService azureFunctionService;
   private final EventGridService eventGridService;
 
   public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,
-      JwtService jwtService,
-      AzureFunctionService azureFunctionService, EventGridService eventGridService) {
+      JwtService jwtService, EventGridService eventGridService) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.jwtService = jwtService;
-    this.azureFunctionService = azureFunctionService;
     this.roleRepository = roleRepository;
     this.eventGridService = eventGridService;
   }
@@ -93,7 +90,7 @@ public class UserService {
     // Verifica si el usuario intentó iniciar sesión en menos de 1 minuto
     if (userLastLogin != null && userLastLogin.isAfter(now.minusMinutes(1))) {
       try {
-        azureFunctionService.ExecuteSuspiciousActivityFor(user.getEmail());
+        eventGridService.ExecuteSuspiciousActivityFor(user.getEmail());
       } catch (Exception ex) {
         ex.printStackTrace();
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "internal server error");

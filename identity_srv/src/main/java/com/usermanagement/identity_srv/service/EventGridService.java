@@ -57,6 +57,38 @@ public class EventGridService {
         
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         return response.body();
+    }
 
+    public String ExecuteSuspiciousActivityFor(String email) throws IOException, InterruptedException {
+        String body = email;
+        String eventType = "suspicious_activity";
+
+        String eventId = UUID.randomUUID().toString();
+        String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
+            .format(DateTimeFormatter.ISO_INSTANT);
+
+        String eventPayload = String.format(
+          "[{\"id\":\"%s\"," +
+              "\"eventType\":\"%s\"," +
+              "\"subject\":\"/example/subject\"," +
+              "\"eventTime\":\"%s\"," +
+              "\"data\":%s," +
+              "\"dataVersion\":\"1.0\"}]",
+          eventId, eventType, timestamp, body);
+
+        
+        System.out.println(String.format("Enviando evento: %s", eventPayload));
+
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+          .uri(URI.create(eventGridTopicEndpoint))
+          .header("Content-Type", "application/json")
+          .header("aeg-sas-key", eventGridKey)
+          .POST(HttpRequest.BodyPublishers.ofString(eventPayload))
+          .build();
+
+        HttpClient client = HttpClient.newHttpClient();
+        
+        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        return response.body();
     }
 }

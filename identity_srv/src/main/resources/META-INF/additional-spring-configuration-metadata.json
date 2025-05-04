@@ -18,5 +18,15 @@
     "name": "azure.function.rol-change-url",
     "type": "java.lang.String",
     "description": "A description for 'azure.function.rol-change-url'"
+  },
+  {
+    "name": "event-grid.key",
+    "type": "java.lang.String",
+    "description": "A description for 'event-grid.key'"
+  },
+  {
+    "name": "event-grid.topic-endpoint",
+    "type": "java.lang.String",
+    "description": "A description for 'event-grid.topic-endpoint'"
   }
 ]}

@@ -28,15 +28,17 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AzureFunctionService azureFunctionService;
+  private final EventGridService eventGridService;
 
   public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,
       JwtService jwtService,
-      AzureFunctionService azureFunctionService) {
+      AzureFunctionService azureFunctionService, EventGridService eventGridService) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.jwtService = jwtService;
     this.azureFunctionService = azureFunctionService;
     this.roleRepository = roleRepository;
+    this.eventGridService = eventGridService;
   }
 
   public List<User> getAllUsers() {
@@ -131,7 +133,7 @@ public class UserService {
       .map(r -> r.getName())
       .collect(Collectors.joining(", "));
       
-      azureFunctionService.ExecuteRolChangeFor(user.getEmail(), rolesStr);
+      eventGridService.ExecuteRolChangeFor(user.getEmail(), rolesStr);
     } catch (Exception ex) {
       ex.printStackTrace();
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "internal server error");

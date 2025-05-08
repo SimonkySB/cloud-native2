@@ -30,34 +30,7 @@ public class EventGridService {
         String body = "Role has been update to " + roleName + " for user: " + email;
         String eventType = "role_change";
 
-        String eventId = UUID.randomUUID().toString();
-        String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
-            .format(DateTimeFormatter.ISO_INSTANT);
-
-        String dataJson = String.format("\"%s\"", body.replace("\"", "\\\""));
-
-        String eventPayload = String.format(
-          "[{\"id\":\"%s\"," +
-              "\"eventType\":\"%s\"," +
-              "\"subject\":\"/example/subject\"," +
-              "\"eventTime\":\"%s\"," +
-              "\"data\":%s," +
-              "\"dataVersion\":\"1.0\"}]",
-          eventId, eventType, timestamp, dataJson);
-
-        
-        System.out.println(String.format("Enviando evento: %s", eventPayload));
-
-        HttpRequest httpRequest = HttpRequest.newBuilder()
-          .uri(URI.create(eventGridTopicEndpoint))
-          .header("Content-Type", "application/json")
-          .header("aeg-sas-key", eventGridKey)
-          .POST(HttpRequest.BodyPublishers.ofString(eventPayload))
-          .build();
-
-        HttpClient client = HttpClient.newHttpClient();
-        
-        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = Send(body, eventType);
         return response.body();
     }
 
@@ -65,24 +38,38 @@ public class EventGridService {
         String body = email;
         String eventType = "suspicious_activity";
 
-        String eventId = UUID.randomUUID().toString();
-        String timestamp = ZonedDateTime.now(ZoneOffset.UTC)
-            .format(DateTimeFormatter.ISO_INSTANT);
+        HttpResponse<String> response = Send(body, eventType);
+        return response.body();
+    }
 
-        String dataJson = String.format("\"%s\"", body.replace("\"", "\\\""));
-        String eventPayload = String.format(
-          "[{\"id\":\"%s\"," +
-              "\"eventType\":\"%s\"," +
-              "\"subject\":\"/example/subject\"," +
-              "\"eventTime\":\"%s\"," +
-              "\"data\":%s," +
-              "\"dataVersion\":\"1.0\"}]",
-          eventId, eventType, timestamp, dataJson);
 
-        
-        System.out.println(String.format("Enviando evento: %s", eventPayload));
+    public String ExecuteRolDeletedEventFor(Long rolId) throws IOException, InterruptedException {
+      String body = rolId.toString();
+      String eventType = "role_deleted";
 
-        HttpRequest httpRequest = HttpRequest.newBuilder()
+      HttpResponse<String> response = Send(body, eventType);
+      return response.body();
+    }
+
+
+    private HttpResponse<String> Send(String body, String eventType) throws IOException, InterruptedException {
+      String eventId = UUID.randomUUID().toString();
+      String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+
+      String dataJson = String.format("\"%s\"", body.replace("\"", "\\\""));
+
+      String eventPayload = String.format(
+        "[{\"id\":\"%s\"," +
+            "\"eventType\":\"%s\"," +
+            "\"subject\":\"/example/subject\"," +
+            "\"eventTime\":\"%s\"," +
+            "\"data\":%s," +
+            "\"dataVersion\":\"1.0\"}]",
+        eventId, eventType, timestamp, dataJson);
+
+      System.out.println(String.format("Enviando evento: %s", eventPayload));
+
+      HttpRequest httpRequest = HttpRequest.newBuilder()
           .uri(URI.create(eventGridTopicEndpoint))
           .header("Content-Type", "application/json")
           .header("aeg-sas-key", eventGridKey)
@@ -91,7 +78,6 @@ public class EventGridService {
 
         HttpClient client = HttpClient.newHttpClient();
         
-        HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        return response.body();
+        return client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
     }
 }

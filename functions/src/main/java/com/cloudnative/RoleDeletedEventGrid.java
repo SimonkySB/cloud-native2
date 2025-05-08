@@ -40,7 +40,7 @@ public class RoleDeletedEventGrid {
             }
 
         } catch (Exception ex) {
-            log.severe(String.format("Error al procesar evento en FuncNotificacionCambioRolesEventGrid: %s",
+            log.severe(String.format("Error al procesar evento en RoleDeletedEventGrid: %s",
                     ex.getMessage()));
             throw new RuntimeException(ex);
         }

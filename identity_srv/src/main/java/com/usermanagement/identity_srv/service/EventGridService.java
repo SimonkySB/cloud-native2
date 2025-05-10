@@ -13,52 +13,47 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class EventGridService {
-    
 
-    @Value("${event-grid.key}")
-    private String eventGridKey;
+  @Value("${event-grid.key}")
+  private String eventGridKey;
 
-    @Value("${event-grid.topic-endpoint}")
-    private String eventGridTopicEndpoint;
+  @Value("${event-grid.topic-endpoint}")
+  private String eventGridTopicEndpoint;
 
+  public String ExecuteRolChangeFor(String email, String roleName) throws IOException, InterruptedException {
 
-    public String ExecuteRolChangeFor(String email, String roleName) throws IOException, InterruptedException {
-        
-        String body = "Role has been update to " + roleName + " for user: " + email;
-        String eventType = "role_change";
+    String body = "Role has been update to " + roleName + " for user: " + email;
+    String eventType = "role_change";
 
-        HttpResponse<String> response = Send(body, eventType);
-        return response.body();
-    }
+    HttpResponse<String> response = Send(body, eventType);
+    return response.body();
+  }
 
-    public String ExecuteSuspiciousActivityFor(String email) throws IOException, InterruptedException {
-        String body = email;
-        String eventType = "suspicious_activity";
+  public String ExecuteSuspiciousActivityFor(String email) throws IOException, InterruptedException {
+    String body = email;
+    String eventType = "suspicious_activity";
 
-        HttpResponse<String> response = Send(body, eventType);
-        return response.body();
-    }
+    HttpResponse<String> response = Send(body, eventType);
+    return response.body();
+  }
 
+  public String ExecuteRolDeletedEventFor(Long rolId) throws IOException, InterruptedException {
+    String body = rolId.toString();
+    String eventType = "role_deleted";
 
-    public String ExecuteRolDeletedEventFor(Long rolId) throws IOException, InterruptedException {
-      String body = rolId.toString();
-      String eventType = "role_deleted";
+    HttpResponse<String> response = Send(body, eventType);
+    return response.body();
+  }
 
-      HttpResponse<String> response = Send(body, eventType);
-      return response.body();
-    }
+  private HttpResponse<String> Send(String body, String eventType) throws IOException, InterruptedException {
+    String eventId = UUID.randomUUID().toString();
+    String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
+    String dataJson = String.format("\"%s\"", body.replace("\"", "\\\""));
 
-    private HttpResponse<String> Send(String body, String eventType) throws IOException, InterruptedException {
-      String eventId = UUID.randomUUID().toString();
-      String timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
-
-      String dataJson = String.format("\"%s\"", body.replace("\"", "\\\""));
-
-      String eventPayload = String.format(
+    String eventPayload = String.format(
         "[{\"id\":\"%s\"," +
             "\"eventType\":\"%s\"," +
             "\"subject\":\"/example/subject\"," +
@@ -67,17 +62,26 @@ public class EventGridService {
             "\"dataVersion\":\"1.0\"}]",
         eventId, eventType, timestamp, dataJson);
 
-      System.out.println(String.format("Enviando evento: %s", eventPayload));
+    System.out.println(String.format("Enviando evento: %s", eventPayload));
 
-      HttpRequest httpRequest = HttpRequest.newBuilder()
-          .uri(URI.create(eventGridTopicEndpoint))
-          .header("Content-Type", "application/json")
-          .header("aeg-sas-key", eventGridKey)
-          .POST(HttpRequest.BodyPublishers.ofString(eventPayload))
-          .build();
+    HttpRequest httpRequest = HttpRequest.newBuilder()
+        .uri(URI.create(eventGridTopicEndpoint))
+        .header("Content-Type", "application/json")
+        .header("aeg-sas-key", eventGridKey)
+        .POST(HttpRequest.BodyPublishers.ofString(eventPayload))
+        .build();
 
-        HttpClient client = HttpClient.newHttpClient();
-        
-        return client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-    }
+    HttpClient client = HttpClient.newHttpClient();
+
+    return client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+  }
+
+  public String ExecuteAssignDefaultRoleFor(String email, String roleName) throws IOException, InterruptedException {
+
+    String body = "Default role" + roleName + "has been assigned for user: " + email;
+    String eventType = "role_default";
+
+    HttpResponse<String> response = Send(body, eventType);
+    return response.body();
+  }
 }

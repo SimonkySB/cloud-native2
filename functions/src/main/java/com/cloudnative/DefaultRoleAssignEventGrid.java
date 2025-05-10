@@ -33,7 +33,7 @@ public class DefaultRoleAssignEventGrid {
             }
 
             if (ev.has("data")) {
-                log.info(String.format("Rol Eliminado. Contenido del evento: %s", ev.get("data").toString()));
+                log.info(String.format("Rol asignado. Contenido del evento: %s", ev.get("data").toString()));
             } else {
                 log.warning("El evento no contiene campo 'data'");
             }

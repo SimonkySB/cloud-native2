@@ -55,7 +55,7 @@ public class UserService {
     User savedUser = userRepository.save(user);
 
     try {
-      eventGridService.ExecuteAssignDefaultRoleFor(dto.email(), "User");
+      eventGridService.ExecuteAssignDefaultRoleFor(dto.email(), "ROLE_USER");
     } catch (Exception ex) {
       ex.printStackTrace();
       throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Event grid connection failed");

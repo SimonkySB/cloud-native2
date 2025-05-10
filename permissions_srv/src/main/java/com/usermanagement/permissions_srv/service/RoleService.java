@@ -3,8 +3,11 @@ package com.usermanagement.permissions_srv.service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.usermanagement.permissions_srv.dto.RoleDto;
 import com.usermanagement.permissions_srv.model.Role;
@@ -18,10 +21,12 @@ public class RoleService {
 
   private final RoleRepository roleRepo;
   private final PermissionRepository permRepo;
+  private final EventGridService eventGridService;
 
-  public RoleService(RoleRepository roleRepo, PermissionRepository permRepo) {
+  public RoleService(RoleRepository roleRepo, PermissionRepository permRepo, EventGridService eventGridService) {
     this.roleRepo = roleRepo;
     this.permRepo = permRepo;
+    this.eventGridService = eventGridService;
   }
 
   public List<Role> getAllRoles() {
@@ -55,5 +60,12 @@ public class RoleService {
   @Transactional
   public void deleteRole(Long id) {
     roleRepo.deleteById(id);
+    try {
+     eventGridService.ExecuteRolDeletedEventFor(id);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el evento rol_deleted");
+    }
+    
   }
 }

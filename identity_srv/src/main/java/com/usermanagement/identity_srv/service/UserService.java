@@ -52,7 +52,16 @@ public class UserService {
       user.setRoles(new HashSet<>(roles));
     }
 
-    return userRepository.save(user);
+    User savedUser = userRepository.save(user);
+
+    try {
+      eventGridService.ExecuteAssignDefaultRoleFor(dto.email(), "User");
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Event grid connection failed");
+    }
+
+    return savedUser;
   }
 
   @Transactional
@@ -124,12 +133,12 @@ public class UserService {
     List<Role> roles = roleRepository.findAllById(roleIds);
     user.setRoles(new HashSet<>(roles));
     userRepository.save(user);
-    
+
     try {
       String rolesStr = user.getRoles().stream()
-      .map(r -> r.getName())
-      .collect(Collectors.joining(", "));
-      
+          .map(r -> r.getName())
+          .collect(Collectors.joining(", "));
+
       eventGridService.ExecuteRolChangeFor(user.getEmail(), rolesStr);
     } catch (Exception ex) {
       ex.printStackTrace();
